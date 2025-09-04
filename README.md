@@ -1,5 +1,5 @@
 # ClimaGuard
-# 🌍 Cold & Air Quality Early-Warning (H-AQ Alert)
+# 🌍 Cold & Air Quality Early-Warning (C-AQ Alert)
 
 A data science project that predicts **next-day heat and air quality risk levels** (Low / Moderate / High) for a given city.  
 The system ingests weather + air pollution data, stores it in a **MySQL database**, trains ML models (Logistic Regression / XGBoost), and exposes predictions through a **FastAPI REST API** with a simple web dashboard.
