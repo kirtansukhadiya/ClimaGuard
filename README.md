@@ -1,5 +1,5 @@
 # ClimaGuard
-# 🌍 Heat & Air Quality Early-Warning (H-AQ Alert)
+# 🌍 Cold & Air Quality Early-Warning (H-AQ Alert)
 
 A data science project that predicts **next-day heat and air quality risk levels** (Low / Moderate / High) for a given city.  
 The system ingests weather + air pollution data, stores it in a **MySQL database**, trains ML models (Logistic Regression / XGBoost), and exposes predictions through a **FastAPI REST API** with a simple web dashboard.
@@ -7,7 +7,7 @@ The system ingests weather + air pollution data, stores it in a **MySQL database
 ---
 
 ## 🚨 Why this project?
-Climate change is driving **extreme heat waves** and **poor air quality**, which threaten public health.  
+Climate change is driving **extreme cold waves** and **poor air quality**, which threaten public health.  
 This project provides an early-warning tool to help people and communities prepare for unsafe conditions.
 
 ---
@@ -78,7 +78,7 @@ GET /risk?city=Toronto
   "date": "2025-09-05",
   "risk": "High",
   "confidence": 0.82,
-  "top_reasons": ["max_temp_c", "mean_aqi", "temp_trend_3d"]
+  "top_reasons": ["min_temp_c", "mean_aqi", "temp_trend_3d"]
 }
 ```
 
