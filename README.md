@@ -1,7 +1,7 @@
 # ClimaGuard
 # 🌍 Cold & Air Quality Early-Warning (C-AQ Alert)
 
-A data science project that predicts **next-day heat and air quality risk levels** (Low / Moderate / High) for a given city.  
+A data science project that predicts **next-day cold and air quality risk levels** (Low / Moderate / High) for a given city.  
 The system ingests weather + air pollution data, stores it in a **MySQL database**, trains ML models (Logistic Regression / XGBoost), and exposes predictions through a **FastAPI REST API** with a simple web dashboard.
 
 ---
@@ -15,7 +15,7 @@ This project provides an early-warning tool to help people and communities prepa
 ## ✨ Features
 - 🔗 **Automated Data Ingestion** from [OpenWeatherMap API](https://openweathermap.org/api)  
 - 🗄️ **SQL Database** (MySQL) for structured storage & analytics  
-- 📊 **Daily Feature Engineering** (rolling averages, 3-day trends, heat index)  
+- 📊 **Daily Feature Engineering** (rolling averages, 3-day trends, cold index)  
 - 🤖 **Machine Learning Models**  
   - Logistic Regression (baseline, interpretable)  
   - XGBoost (boosted accuracy)  
@@ -40,7 +40,7 @@ This project provides an early-warning tool to help people and communities prepa
 ## 📂 Project Structure
 
 ```bash
-h-aq-alert/
+ClimaGuard/
 │
 ├── sql/
 │   └── schema.sql            # MySQL database schema (tables for raw + daily data + predictions)
@@ -78,7 +78,7 @@ GET /risk?city=Toronto
   "date": "2025-09-05",
   "risk": "High",
   "confidence": 0.82,
-  "top_reasons": ["min_temp_c", "mean_aqi", "temp_trend_3d"]
+  "top_reasons": ["min_temp_c", "mean_aqi", "wind_chill"]
 }
 ```
 
