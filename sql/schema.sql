@@ -10,6 +10,15 @@ CREATE TABLE IF NOT EXISTS weather_raw (
     aqi INT,
     pm25 FLOAT,
     pm10 FLOAT,
+    weather_description VARCHAR(255),
+    wind_direction INT,
+    cloudiness INT,
+    co FLOAT,
+    no_ FLOAT,
+    no2 FLOAT,
+    o3 FLOAT,
+    so2 FLOAT,
+    nh3 FLOAT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
