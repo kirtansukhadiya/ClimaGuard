@@ -1,0 +1,68 @@
+Step 1 → Database Setup
+📄 File: sql/schema.sql
+Create your MySQL database climaguard.
+Write SQL to make:
+weather_raw (raw API data)
+weather_daily (aggregated daily features)
+✅ Run schema once in MySQL Workbench to set up tables.
+
+Step 2 → Fetch & Store Raw Data
+📄 File: src/ingest.py
+Learn to call WeatherAPI & Air Pollution API using requests.
+Parse JSON → extract temp, min_temp, wind_speed, AQI.
+Insert into weather_raw.
+Test by calling for 1 city (e.g., Toronto) and inserting a row.
+
+✅ You should see rows appearing in weather_raw.
+Step 3 → Feature Engineering
+📄 File: src/features.py
+Load weather_raw into pandas.
+Compute: avg/min/max temp, avg wind speed, avg AQI.
+Compute wind chill index.
+Insert daily summary into weather_daily.
+✅ You should see summarized rows in weather_daily.
+
+Step 4 → Train ML Model
+📄 File: src/train.py
+Query weather_daily.
+Define risk_level column (Low/Medium/High).
+Train Logistic Regression or RandomForest.
+Save model as models/risk_model.joblib.
+✅ You should have a trained model file in /models/.
+
+Step 5 → Explainability (Optional, Good for CV)
+📄 File: src/explain.py
+Load risk_model.joblib.
+Run SHAP explainer.
+Plot feature importance → save as .png.
+✅ You’ll have an image showing which factors matter most.
+
+Step 6 → Backend API
+📄 File: src/service.py
+Create FastAPI app.
+/predict?city=Toronto: load latest features → return risk level.
+/health: return OK.
+Run with:
+uvicorn src.service:app --reload
+✅ You can visit http://127.0.0.1:8000/predict?city=Toronto and see JSON.
+
+Step 7 → Testing
+📄 File: tests/test_service.py
+Use pytest and TestClient to test endpoints.
+Test /predict returns risk in JSON.
+Test /health returns 200 OK.
+✅ Tests pass → backend is stable.
+
+Step 8 → Frontend Dashboard
+📄 File: web/index.html
+Basic HTML page.
+JavaScript fetch() → call /predict.
+Display risk level with color-coded badge.
+Optional: use Chart.js to plot AQI & temperature trends.
+✅ Dashboard shows live prediction for your chosen city.
+
+Step 9 → Final Touches
+📄 File: .env.example
+Add example API key + DB creds.
+📄 File: README.md
+Add project description, structure, install steps, screenshots.
