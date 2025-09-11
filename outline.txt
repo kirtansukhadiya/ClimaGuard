@@ -12,8 +12,8 @@ Learn to call WeatherAPI & Air Pollution API using requests.
 Parse JSON → extract temp, min_temp, wind_speed, AQI.
 Insert into weather_raw.
 Test by calling for 1 city (e.g., Toronto) and inserting a row.
-
 ✅ You should see rows appearing in weather_raw.
+
 Step 3 → Feature Engineering
 📄 File: src/features.py
 Load weather_raw into pandas.
