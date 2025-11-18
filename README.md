@@ -55,13 +55,7 @@ ClimaGuard/
 ├── web/
 │   └── index.html            # Simple dashboard (calls FastAPI endpoints to show results)
 │
-├── tests/
-│   └── test_service.py       # Unit tests for the FastAPI backend
-│
 ├── models/                   # Folder to store trained ML models (.joblib files)
-│
-├── scripts/
-│   └── eda.py                # Exploratory Data Analysis (EDA) & visualization in Python
 │
 ├── .env.example              # Example file for API keys & DB credentials
 ├── requirements.txt          # List of Python dependencies (pinned versions)

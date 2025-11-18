@@ -46,14 +46,7 @@ Run with:
 uvicorn src.service:app --reload
 ✅ You can visit http://127.0.0.1:8000/predict?city=Toronto and see JSON.
 
-Step 7 → Testing
-📄 File: tests/test_service.py
-Use pytest and TestClient to test endpoints.
-Test /predict returns risk in JSON.
-Test /health returns 200 OK.
-✅ Tests pass → backend is stable.
-
-Step 8 → Frontend Dashboard
+Step 7 → Frontend Dashboard
 📄 File: web/index.html
 Basic HTML page.
 JavaScript fetch() → call /predict.
@@ -61,7 +54,7 @@ Display risk level with color-coded badge.
 Optional: use Chart.js to plot AQI & temperature trends.
 ✅ Dashboard shows live prediction for your chosen city.
 
-Step 9 → Final Touches
+Step 8 → Final Touches
 📄 File: .env.example
 Add example API key + DB creds.
 📄 File: README.md

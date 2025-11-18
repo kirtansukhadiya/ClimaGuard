@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS weather_raw (
 
 CREATE TABLE IF NOT EXISTS weather_daily(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    city VARCHAR(100),
+    city VARCHAR(100) DEFAULT 'Toronto',
     date DATE NOT NULL,
     min_temp_c FLOAT NOT NULL,
     avg_temp_c FLOAT NOT NULL,
@@ -43,5 +43,6 @@ CREATE TABLE IF NOT EXISTS predictions(
     date DATE NOT NULL,
     predicted_risk VARCHAR(20),
     confidence FLOAT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_city_date (city, date)
 );

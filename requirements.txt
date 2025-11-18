@@ -12,11 +12,13 @@ mysql-connector-python==9.0.0
 
 # Machine Learning
 scikit-learn==1.5.1
+joblib==1.5.1
 xgboost==2.1.0
 shap==0.45.1
 
 # API
 fastapi==0.111.1
+pydantic==2.11.7
 uvicorn==0.30.3
 
 # Scheduling (optional for daily jobs)

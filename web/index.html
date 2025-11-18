@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClimaGuard - Cold & Air Quality Early Warning System</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .search-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .risk-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .risk-legend {
+            font-size: 0.75em;
+            color: #888;
+            text-align: center;
+            line-height: 1.8;
+            margin: 10px 0 20px 0;
+        }
+
+        .risk-legend strong {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 20px 0;
+            text-transform: uppercase;
+        }
+
+        .risk-low {
+            background: #4caf50;
+            color: white;
+        }
+
+        .risk-moderate {
+            background: #ff9800;
+            color: white;
+        }
+
+        .risk-high {
+            background: #f44336;
+            color: white;
+        }
+
+        .confidence {
+            font-size: 1.2em;
+            color: #666;
+            margin: 10px 0;
+        }
+
+        .reasons {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .reasons h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .reason-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f5f5f5;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+
+        .history-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .history-section h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 20px;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #c62828;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .history-table th {
+            background: #f5f5f5;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .history-table tr:hover {
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌍 ClimaGuard</h1>
+            <p class="subtitle">Cold & Air Quality Early Warning System</p>
+        </header>
+
+        <div class="search-section">
+            <form class="search-form" onsubmit="fetchRisk(event)">
+                <input 
+                    type="text" 
+                    id="cityInput" 
+                    placeholder="Enter city name (e.g., Toronto, New York, London)" 
+                    value="Toronto"
+                    required
+                >
+                <button type="submit">Get Risk Assessment</button>
+            </form>
+        </div>
+
+        <div id="riskCard" style="display: none;">
+            <div class="risk-card">
+                <h2 id="cityName"></h2>
+                <div class="risk-legend">
+                    <strong>Risk Levels:</strong><br>
+                    <strong style="color: #4caf50;">Low:</strong> Safe conditions<br>
+                    <strong style="color: #ff9800;">Moderate:</strong> Caution advised<br>
+                    <strong style="color: #f44336;">High:</strong> Take precautions
+                </div>
+                <div id="riskBadge" class="risk-badge"></div>
+                <div class="confidence">Confidence: <span id="confidence"></span></div>
+                <div class="reasons">
+                    <h3>Top Contributing Factors:</h3>
+                    <div id="reasonsList"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="errorMessage" class="error" style="display: none;"></div>
+
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading data...</p>
+        </div>
+
+        <div id="historySection" class="history-section" style="display: none;">
+            <h2>Historical Data & Trends</h2>
+            <div class="chart-container">
+                <canvas id="historyChart"></canvas>
+            </div>
+            <table class="history-table" id="historyTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Min Temp (°C)</th>
+                        <th>Avg Temp (°C)</th>
+                        <th>Wind Speed</th>
+                        <th>Humidity</th>
+                        <th>Wind Chill</th>
+                        <th>Mean AQI</th>
+                        <th>Risk Level</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // API Base URL - configure this based on your deployment
+        // For local development: 'http://localhost:8000'
+        // For production: update this to your production API URL
+        const API_BASE_URL = 'http://localhost:8000';
+        let historyChart = null;
+
+        async function fetchRisk(event) {
+            event.preventDefault();
+            const city = document.getElementById('cityInput').value.trim();
+            
+            if (!city) {
+                showError('Please enter a city name');
+                return;
+            }
+
+            // Hide previous results
+            document.getElementById('riskCard').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('historySection').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+
+            try {
+                // Fetch risk prediction
+                const riskResponse = await fetch(`${API_BASE_URL}/risk?city=${encodeURIComponent(city)}`);
+                
+                if (!riskResponse.ok) {
+                    const errorData = await riskResponse.json();
+                    throw new Error(errorData.detail || 'Failed to fetch risk prediction');
+                }
+
+                const riskData = await riskResponse.json();
+                displayRisk(riskData);
+
+                // Fetch history
+                await fetchHistory(city);
+                
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function displayRisk(data) {
+            document.getElementById('cityName').textContent = `Risk Assessment for ${data.city}`;
+            
+            const riskBadge = document.getElementById('riskBadge');
+            riskBadge.textContent = data.risk;
+            riskBadge.className = 'risk-badge risk-' + data.risk.toLowerCase();
+            
+            document.getElementById('confidence').textContent = (data.confidence * 100).toFixed(1) + '%';
+            
+            const reasonsList = document.getElementById('reasonsList');
+            reasonsList.innerHTML = '';
+            data.top_reasons.forEach((reason, index) => {
+                const item = document.createElement('div');
+                item.className = 'reason-item';
+                item.textContent = `${index + 1}. ${reason.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}`;
+                reasonsList.appendChild(item);
+            });
+
+            document.getElementById('riskCard').style.display = 'block';
+        }
+
+        async function fetchHistory(city) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/history?city=${encodeURIComponent(city)}&days=30`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch history');
+                }
+
+                const historyData = await response.json();
+                displayHistory(historyData);
+                
+            } catch (error) {
+                console.error('Error fetching history:', error);
+                // Don't show error for history, just don't display it
+            }
+        }
+
+        function displayHistory(data) {
+            if (!data.entries || data.entries.length === 0) {
+                return;
+            }
+
+            // Sort by date (newest first)
+            const entries = data.entries.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // Update table
+            const tableBody = document.getElementById('historyTableBody');
+            tableBody.innerHTML = '';
+            entries.slice(0, 30).forEach(entry => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${entry.date}</td>
+                    <td>${entry.min_temp_c.toFixed(1)}</td>
+                    <td>${entry.avg_temp_c.toFixed(1)}</td>
+                    <td>${entry.wind_speed.toFixed(1)}</td>
+                    <td>${entry.humidity.toFixed(1)}%</td>
+                    <td>${entry.wind_chill.toFixed(1)}</td>
+                    <td>${entry.mean_aqi.toFixed(1)}</td>
+                    <td><span class="risk-badge risk-${(entry.risk_level || 'low').toLowerCase()}" style="padding: 5px 15px; font-size: 0.8em;">${entry.risk_level || 'N/A'}</span></td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Create chart
+            const ctx = document.getElementById('historyChart').getContext('2d');
+            
+            if (historyChart) {
+                historyChart.destroy();
+            }
+
+            // Prepare chart data (last 30 days)
+            const chartEntries = entries.slice(0, 30).reverse();
+            const labels = chartEntries.map(e => e.date);
+            
+            historyChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Min Temperature (°C)',
+                            data: chartEntries.map(e => e.min_temp_c),
+                            borderColor: 'rgb(75, 192, 192)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            yAxisID: 'y',
+                        },
+                        {
+                            label: 'Mean AQI',
+                            data: chartEntries.map(e => e.mean_aqi),
+                            borderColor: 'rgb(255, 99, 132)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            yAxisID: 'y1',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Temperature (°C)'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'AQI'
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                        }
+                    }
+                }
+            });
+
+            document.getElementById('historySection').style.display = 'block';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        // Load default city on page load
+        window.addEventListener('load', () => {
+            // Auto-fetch for Toronto on load (optional)
+            // fetchRisk({ preventDefault: () => {} });
+        });
+    </script>
+</body>
+</html>
+
