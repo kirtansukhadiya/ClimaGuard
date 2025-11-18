@@ -64,9 +64,8 @@ ClimaGuard/
 ---
 
 ## Example Output
-
-![Output Image](Output/Output 1.png)
-![Output Image](Output/Output 2.png)
+![Output Image](Output/Output%201.png) 
+![Output Image](Output/Output%202.png)
 
 ```bash
 GET /risk?city=Toronto
